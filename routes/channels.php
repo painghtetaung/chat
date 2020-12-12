@@ -17,3 +17,12 @@ Broadcast::channel('messages.{id}', function ($user, $id) {
     
     return $user->id === (int) $id;
 });
+
+Broadcast::channel('plchat', function ($user) {
+    
+    if(auth()->check())
+    {
+        return $user;
+    };
+});
+

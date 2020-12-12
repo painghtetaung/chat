@@ -2010,6 +2010,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     contacts: {
@@ -2019,21 +2020,62 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      selected: this.contacts.length ? this.contacts[0] : null
+      selected: this.contacts.length ? this.contacts[0] : null,
+      activeFriends: [],
+      index: null
     };
   },
   methods: {
     selectContact: function selectContact(contact) {
       this.selected = contact;
       this.$emit('selected', contact);
+    },
+    active: function active(contactid) {
+      for (var i = 0; i < this.activeFriends.length; i++) {
+        if (this.activeFriends[i].activeFriend_id == contactid) {
+          return true;
+        }
+      }
+
+      return false;
     }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    axios.get('/actviefriend/get').then(function (response) {
+      _this.activeFriends = response.data;
+      console.log('activeUsers', _this.activeFriends);
+    }), Echo.join("plchat").here(function (users) {
+      console.log('Active Friends', users);
+    }).joining(function (user) {
+      console.log(user.name, 'Joined');
+      axios.post('/activefriend/add', {
+        activeFriend_id: user.id
+      }).then(function (response) {
+        _this.activeFriends.push(response.data); // console.log(this.activeFriends);
+
+      });
+    }).leaving(function (user) {
+      _this.index = _this.activeFriends.indexOf(user);
+
+      _this.activeFriends.splice(_this.index, 1);
+
+      axios["delete"]('/activefriend/delete', {
+        params: {
+          'leavingFriend_id': user.id
+        }
+      }); // this.activeFriends.splice(this.activeFriends.indexOf(user),1);
+
+      console.log(user.name, 'Left');
+    });
   },
   computed: {
     sortedContacts: function sortedContacts() {
-      var _this = this;
+      var _this2 = this;
 
       return _.sortBy(this.contacts, [function (contact) {
-        if (contact == _this.selected) {
+        if (contact == _this2.selected) {
           return Infinity;
         }
 
@@ -6649,7 +6691,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".contacts-list[data-v-484f3208] {\n  flex: 2;\n  max-height: 600px;\n  overflow: scroll;\n  border-left: 1px solid #a6a6a6;\n}\n.contacts-list ul[data-v-484f3208] {\n  list-style-type: none;\n  padding-left: 0;\n}\n.contacts-list ul li[data-v-484f3208] {\n  display: flex;\n  padding: 2px;\n  border-bottom: 1px solid #aaaaaa;\n  height: 80px;\n  position: relative;\n  cursor: pointer;\n}\n.contacts-list ul li.selected[data-v-484f3208] {\n  background: #dfdfdf;\n}\n.contacts-list ul li span.unread[data-v-484f3208] {\n  background: #82e0a8;\n  color: #fff;\n  position: absolute;\n  right: 11px;\n  top: 20px;\n  display: flex;\n  font-weight: 700;\n  min-width: 20px;\n  justify-content: center;\n  align-items: center;\n  line-height: 20px;\n  font-size: 12px;\n  padding: 0 4px;\n  border-radius: 3px;\n}\n.contacts-list ul li .avatar[data-v-484f3208] {\n  flex: 1;\n  display: flex;\n  align-items: center;\n}\n.contacts-list ul li .avatar img[data-v-484f3208] {\n  width: 35px;\n  border-radius: 50px;\n  margin: 0 auto;\n}\n.contacts-list ul li .contact[data-v-484f3208] {\n  flex: 3;\n  font-size: 11px;\n  overflow: hidden;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n}\n.contacts-list ul li .contact p[data-v-484f3208] {\n  margin: 0;\n}\n.contacts-list ul li .contact p.name[data-v-484f3208] {\n  font-weight: bold;\n}", ""]);
+exports.push([module.i, ".contacts-list[data-v-484f3208] {\n  flex: 2;\n  max-height: 600px;\n  overflow: scroll;\n  border-left: 1px solid #a6a6a6;\n}\n.contacts-list ul[data-v-484f3208] {\n  list-style-type: none;\n  padding-left: 0;\n}\n.contacts-list ul li[data-v-484f3208] {\n  display: flex;\n  padding: 2px;\n  border-bottom: 1px solid #aaaaaa;\n  height: 80px;\n  position: relative;\n  cursor: pointer;\n}\n.contacts-list ul li.selected[data-v-484f3208] {\n  background: #dfdfdf;\n}\n.contacts-list ul li span.unread[data-v-484f3208] {\n  background: #82e0a8;\n  color: #fff;\n  position: absolute;\n  right: 11px;\n  top: 20px;\n  display: flex;\n  font-weight: 700;\n  min-width: 20px;\n  justify-content: center;\n  align-items: center;\n  line-height: 20px;\n  font-size: 12px;\n  padding: 0 4px;\n  border-radius: 3px;\n}\n.contacts-list ul li span.active[data-v-484f3208] {\n  background: #9feb11;\n  color: #fff;\n  position: absolute;\n  left: 11px;\n  top: 20px;\n  display: flex;\n  font-weight: 700;\n  min-width: 20px;\n  justify-content: center;\n  align-items: center;\n  line-height: 20px;\n  font-size: 12px;\n  padding: 0 4px;\n  border-radius: 8px;\n}\n.contacts-list ul li .avatar[data-v-484f3208] {\n  flex: 1;\n  display: flex;\n  align-items: center;\n}\n.contacts-list ul li .avatar img[data-v-484f3208] {\n  width: 35px;\n  border-radius: 50px;\n  margin: 0 auto;\n}\n.contacts-list ul li .contact[data-v-484f3208] {\n  flex: 3;\n  font-size: 11px;\n  overflow: hidden;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n}\n.contacts-list ul li .contact p[data-v-484f3208] {\n  margin: 0;\n}\n.contacts-list ul li .contact p.name[data-v-484f3208] {\n  font-weight: bold;\n}", ""]);
 
 // exports
 
@@ -44794,6 +44836,10 @@ var render = function() {
               ? _c("span", { staticClass: "unread" }, [
                   _vm._v(_vm._s(contact.unread))
                 ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.active(contact.id)
+              ? _c("span", { staticClass: "active" }, [_vm._v("1")])
               : _vm._e()
           ]
         )

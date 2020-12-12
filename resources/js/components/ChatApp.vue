@@ -20,7 +20,8 @@
             return {
                 selectedContact: null,
                 messages: [],
-                contacts: []
+                contacts: [],
+              
             };
         },
 
@@ -65,10 +66,13 @@
         },
 
         mounted() {
+
+           
+
             Echo.private(`messages.${this.user.id}`)
                 .listen('NewMessage', (e) => {
                    this.handleIncoming(e.message) 
-                })
+                });
            
             axios.get('/contacts')
                 .then((response) => {

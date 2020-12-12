@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Activefriend;
 use App\Providers\RouteServiceProvider;
+
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -25,6 +29,8 @@ class LoginController extends Controller
      * Where to redirect users after login.
      *
      * @var string
+     * 
+     * 
      */
     protected $redirectTo = RouteServiceProvider::HOME;
 
@@ -33,8 +39,28 @@ class LoginController extends Controller
      *
      * @return void
      */
+
+    protected function authenticated(Request $request, $user)
+    {
+        // stuff to do after user logs in
+        $activefriend = Activefriend::create([
+            'activeFriend_id' => auth()->id(),
+        ]);
+    }
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+       
     }
+
+    public function logout()
+    {
+        
+        Auth::logout();
+        $leavingFriend_id = auth()->id();
+        $leavingfriend = Activefriend::where('activeFriend_id', $leavingFriend_id)->delete();
+        return redirect('/');
+    }
+
+  
 }

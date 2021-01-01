@@ -25,6 +25,7 @@
     },
     "dependencies": {
         "laravel-echo": "^1.9.0",
-        "pusher-js": "^7.0.1"
+        "pusher-js": "^7.0.1",
+        "vue-upload-component": "^2.8.22"
     }
 }

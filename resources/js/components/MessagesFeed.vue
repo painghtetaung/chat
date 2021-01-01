@@ -5,6 +5,10 @@
                 <div class="text">
                     {{ message.text }}
                 </div>
+
+                <div class="image-container">
+                    <img v-if="message.image" :src="'/storage/'+message.image" alt="">
+                </div>
             </li>
         </ul>
     </div>
@@ -64,6 +68,11 @@ export default {
                     padding: 12px;
                     display: inline-block;
                 }
+
+                img {
+                        max-width: 250px;
+                        max-height: 200px;
+                    }
 
                 &.received {
                     text-align: left;

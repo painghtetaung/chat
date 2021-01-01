@@ -1,14 +1,39 @@
 <template>
   <dir class="composer">
+  
+     <file-upload
+        :post-action="'/conversation/send/'+contact.id"
+        ref='upload'
+        v-model="files"
+         @input-file="$refs.upload.active = true"
+        :headers="{'X-CSRF-TOKEN': token}" 
+    >
+        Attach File
+     </file-upload>
+      
       <textarea v-model="message" @keydown.enter="send" placeholder="Message..."></textarea>
   </dir> 
 </template>
 
 <script>
+
 export default {
+
+     props: {
+        contact: {
+            type: Object,
+            
+        },
+        
+    },
+
     data() {
         return {
-            message: ''
+            message: '',
+            messages: [],
+            files: [],
+            token:document.head.querySelector('meta[name="csrf-token"]').content,
+            
         };
     },
     methods: {
@@ -20,8 +45,42 @@ export default {
 
             this.$emit('send', this.message);
             this.message = '';
+        },
+
+        
+       
+        // sendFiles(event) {
+        //     this.files=event.target.files[0];
+        //     this.files = this.files.name;
+        //     console.log(this.files.name);
+
+        //     this.$emit('sendImage', this.files);
+        //     this.files = '';
+        //     // axios.post('/conversation/imgsend', {
+        //     //     image: this.files
+        //     // }).then((response) => {
+        //     //     console.log("send image") 
+        //     // })
+
+        // }
+
+    },
+
+    watch:{
+        files:{
+            deep:true,
+            handler(){
+                let success = this.files[0].success;
+                if(success){
+                     this.$emit('fetchMessages',this.contact);
+                     console.log(this.contact);
+                }
+            }
         }
     }
+   
+
+
 
 
 }

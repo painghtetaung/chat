@@ -1,6 +1,7 @@
 <template>
    <div class="chat-app">
-       <Conversation :contact="selectedContact" :messages="messages" @new="saveNewMessage"/>
+       <Conversation :contact="selectedContact" :messages="messages" @new="saveNewMessage" @newFile="startConversationWith"/>
+      
        <ContactsList :contacts="contacts" @selected="startConversationWith" />
    </div>
 </template>
@@ -8,6 +9,9 @@
 <script>
     import Conversation from './Conversation';
     import ContactsList from './ContactsList';
+import MessageComposer from './MessageComposer.vue';
+    
+    
     export default {
         props: {
             user: {
@@ -32,6 +36,14 @@
                     .then((response) => {
                         this.messages = response.data;
                         this.selectedContact = contact;
+                    })
+            },
+
+            fetchMessages(contact) {
+                axios.get(`/conversation/${contact.id}`)
+                    .then((response) => {
+                        // this.messages = response.data;
+                        console.log('fetch Message')
                     })
             },
 
@@ -78,11 +90,16 @@
                 .then((response) => {
                     this.contacts = response.data;
                 });
+
+            
         },
 
         components: {
             Conversation,
-            ContactsList
+            ContactsList,
+                MessageComposer,
+            
+            
         }
     }
 </script>

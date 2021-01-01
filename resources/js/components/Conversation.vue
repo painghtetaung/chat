@@ -2,7 +2,7 @@
     <div class="conversation">
         <h1>{{ contact ? contact.name: 'Select a Contact' }}</h1>
         <MessagesFeed :contact="contact" :messages="messages" />
-        <MessageComposer @send = "sendMessage"/>
+        <MessageComposer :contact="contact" v-if='contact' @send = "sendMessage" @fetchMessages="fetchMessages"/>
     </div>
 </template>
 
@@ -32,16 +32,39 @@ export default {
         sendMessage(text) {
             if (!this.contact) 
             {
-                return;
+                return;//should add later console.log or somthing 
             }
 
             axios.post('/conversation/send', {
-                contact_id: this.contact.id,
-                text: text
+                contact_id: this.contact.id,//receiver id
+                text: text,
             }).then((response) => {
                 this.$emit('new', response.data); 
             })
-        }
+        },
+
+        fetchMessages(contact) {
+                // axios.get(`/conversation/${contact.id}`)
+                //     .then((response) => {
+                       this.$emit('newFile', this.contact);
+                       console.log("emit");
+                       console.log(this.contact);
+                    
+            },
+
+        // sendImage(image) {
+        //     if (!this.contact) 
+        //     {
+        //         return;//should add later console.log or somthing 
+        //     }
+
+        //     axios.post('/conversation/send', {
+        //         contact_id: this.contact.id,//receiver id
+        //         image: image
+        //     }).then((response) => {
+        //         this.$emit('new', response.data); 
+        //     })
+        // }
     }
 
 }

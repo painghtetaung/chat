@@ -43,22 +43,20 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         // stuff to do after user logs in
-        $activefriend = Activefriend::create([
-            'activeFriend_id' => auth()->id(),
-        ]);
+        // $activefriend = Activefriend::create([
+        //     'activeFriend_id' => auth()->id(),
+        // ]);
     }
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-       
     }
 
     public function logout()
     {
-        
-        Auth::logout();
         $leavingFriend_id = auth()->id();
-        $leavingfriend = Activefriend::where('activeFriend_id', $leavingFriend_id)->delete();
+        Activefriend::where('activeFriend_id', $leavingFriend_id)->delete();
+        Auth::logout();
         return redirect('/');
     }
 

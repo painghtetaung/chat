@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activefriend;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -13,7 +14,9 @@ class HomeController extends Controller
      */
     public function __construct()
     {
+       
         $this->middleware('auth');
+     
     }
 
     /**
@@ -23,6 +26,11 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $activefriend = Activefriend::create([
+            'activeFriend_id' => auth()->id(),
+        ]);
         return view('home');
     }
+
+    
 }

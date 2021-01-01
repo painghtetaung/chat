@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateActivefriendsTable extends Migration
+class AddImageFieldToMessagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class CreateActivefriendsTable extends Migration
      */
     public function up()
     {
-        Schema::create('activefriends', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('activeFriend_id')->nullable();
-            $table->timestamps();
+        Schema::table('messages', function (Blueprint $table) {
+            $table->string('image')->nullable();
         });
     }
 
@@ -27,6 +25,8 @@ class CreateActivefriendsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('activefriends');
+        Schema::table('messages', function (Blueprint $table) {
+            //
+        });
     }
 }

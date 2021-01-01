@@ -10,14 +10,29 @@ class MessagesController extends Controller
 {
     public function send(Request $request)
     {
-        $message = Message::create([
-            'from' => auth()->id(),
-            'to' => $request->contact_id,
-            'text' => $request->text,
-        ]);
+        
+        if(request()->has('file')){
+            $filename = request('file')->store('chat','public');
+                $message = Message::create([
+                    'from' => auth()->id(),
+                    'to' => $request->contactId,
+                    'image' => $filename,
+                    'text' => $request->text,
+                ]);
+            }else
+            {
+                $message = Message::create([
+                    'from' => auth()->id(),
+                    'to' => $request->contact_id,
+                    'text' => $request->text,
+                ]);
+            }
 
+               
         broadcast(new NewMessage($message));
 
         return response()->json($message);
     }
+
+        
 }

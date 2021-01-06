@@ -2,13 +2,18 @@
     <div class="feed" ref="feed">
         <ul v-if="contact">
             <li v-for="message in messages" :key="message.id" :class="`message${message.to == contact.id ? ' sent' : ' received'}`">
-                <div class="text">
+                <div class="text" v-if="message.text">
                     {{ message.text }}
                 </div>
 
                 <div class="image-container">
                     <img v-if="message.image" :src="'/storage/'+message.image" alt="">
                 </div>
+
+               <!-- <v-flex class="caption font-italic">
+                  {{message.created_at}}
+                </v-flex>
+                <br> -->
             </li>
         </ul>
     </div>

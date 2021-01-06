@@ -7,6 +7,10 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+// import Vuetify from 'vuetify'
+// import 'vuetify/dist/vuetify.min.css'
+
+// Vue.use(Vuetify)
 
 /**
  * The following block of code may be used to automatically register your
@@ -23,6 +27,7 @@ Vue.component('file-upload', VueUploadComponent)
 
 
 Vue.component('chat-app', require('./components/ChatApp.vue').default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

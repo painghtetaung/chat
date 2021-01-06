@@ -1,14 +1,14 @@
 <template>
   <dir class="composer">
-  
+      
      <file-upload
         :post-action="'/conversation/send/'+contact.id"
         ref='upload'
         v-model="files"
          @input-file="$refs.upload.active = true"
         :headers="{'X-CSRF-TOKEN': token}" 
-    >
-        Attach File
+        >
+       Attach File
      </file-upload>
       
       <textarea v-model="message" @keydown.enter="send" placeholder="Message..."></textarea>
